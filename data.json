@@ -1,0 +1,20 @@
+{
+  "studentInfo": {
+    "class": "Class 6",
+    "subject": "General Science & ICT"
+  },
+  "textbooks": [
+    {
+      "id": 1,
+      "title": "Science - Chapter 13",
+      "page": 31,
+      "topic": "Food and Nutrition"
+    },
+    {
+      "id": 2,
+      "title": "ICT Study Guide",
+      "page": 1,
+      "topic": "NASA & Space Exploration"
+    }
+  ]
+}
