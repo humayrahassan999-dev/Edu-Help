@@ -112,13 +112,17 @@
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            padding: 20px;
+            padding: 25px;
+            text-align: center;
             animation: fadeIn 0.3s ease-in-out;
         }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Chat UI */
+        /* Chat UI styling adjustments */
+        #ai-buddy.section { text-align: left; }
+        #api-guide.section { text-align: left; }
+
         #chat-container {
             display: flex;
             flex-direction: column;
@@ -143,6 +147,7 @@
             word-wrap: break-word;
             font-size: 0.95rem;
             line-height: 1.4;
+            text-align: left;
         }
         .message.user {
             background-color: #e3f2fd;
@@ -179,33 +184,28 @@
             font-weight: bold;
         }
 
-        /* Textbooks UI */
-        .textbook-grid {
-            display: grid;
-            gap: 12px;
+        /* NCTB Portal Link Tab UI */
+        .portal-box {
+            padding: 30px 20px;
+            background: #fafafa;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
             margin-top: 15px;
         }
-        .textbook-card {
-            padding: 14px;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            background: #fafafa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .textbook-card div h3 { font-size: 1rem; color: var(--primary-dark); margin-bottom: 4px; }
-        .textbook-card div p { font-size: 0.85rem; color: #666; }
-        .btn-link {
-            padding: 8px 14px;
+        .portal-box h3 { color: var(--primary-dark); margin-bottom: 10px; font-size: 1.2rem; }
+        .portal-box p { color: #666; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+        .btn-portal {
+            display: inline-block;
+            padding: 12px 25px;
             background-color: var(--primary);
             color: white;
             text-decoration: none;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            white-space: nowrap;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.2s;
         }
-        .btn-link:hover { background-color: var(--primary-dark); }
+        .btn-portal:hover { background-color: var(--primary-dark); }
 
         /* API Guide UI */
         .api-box {
@@ -236,6 +236,7 @@
             font-size: 0.9rem;
             margin-top: 10px;
             display: none;
+            text-align: left;
         }
         .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
         .alert-info { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
@@ -278,12 +279,13 @@
             </div>
         </div>
 
-        <!-- NCTB Textbooks Tab -->
+        <!-- NCTB Textbooks Link Tab -->
         <div id="textbooks" class="section">
-            <h2>NCTB Official Textbooks</h2>
-            <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">Access official curriculum books directly from NCTB.</p>
-            <div id="textbook-list" class="textbook-grid">
-                <!-- Textbooks injected directly from internal data -->
+            <h2>NCTB Official Web Portal</h2>
+            <div class="portal-box">
+                <h3>Access All Class Textbooks Online</h3>
+                <p>Click the button below to visit the official National Curriculum and Textbook Board (NCTB) website where you can view and download all your curriculum books.</p>
+                <a href="http://www.nctb.gov.bd/" target="_blank" class="btn-portal">Visit Official NCTB Website 🌐</a>
             </div>
         </div>
 
@@ -304,15 +306,6 @@
     </main>
 
     <script>
-        // Embedded Textbooks Data
-        const textbooksData = [
-            { id: 1, title: "Science - Chapter 13 (Food and Nutrition)", classLevel: "Class 6", subject: "Science", link: "http://www.nctb.gov.bd/" },
-            { id: 2, title: "ICT Study Guide (NASA & Space Exploration)", classLevel: "Class 6", subject: "ICT", link: "http://www.nctb.gov.bd/" },
-            { id: 3, title: "Mathematics", classLevel: "Class 6", subject: "Math", link: "http://www.nctb.gov.bd/" },
-            { id: 4, title: "English For Today", classLevel: "Class 6", subject: "English", link: "http://www.nctb.gov.bd/" },
-            { id: 5, title: "Bangladesh and Global Studies", classLevel: "Class 6", subject: "BGS", link: "http://www.nctb.gov.bd/" }
-        ];
-
         // Tab Navigation
         function switchTab(tabId, btn) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
@@ -325,7 +318,6 @@
 
         // On page load
         window.onload = function() {
-            renderTextbooks();
             checkExistingKeyStatus();
 
             // Hide loading screen smoothly
@@ -335,24 +327,6 @@
                 setTimeout(() => { loader.style.display = 'none'; }, 500);
             }
         };
-
-        function renderTextbooks() {
-            const container = document.getElementById('textbook-list');
-            if (!container) return;
-            let html = '';
-            textbooksData.forEach(book => {
-                html += `
-                    <div class="textbook-card">
-                        <div>
-                            <h3>${book.title}</h3>
-                            <p>Class: ${book.classLevel} | Subject: ${book.subject}</p>
-                        </div>
-                        <a href="${book.link}" target="_blank" class="btn-link">View NCTB</a>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
 
         function checkExistingKeyStatus() {
             const savedKey = localStorage.getItem("gemini_api_key");
