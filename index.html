@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 6 Student Hub</title>
+    <style>
+        :root {
+            --primary: #00796b;
+            --secondary: #ff7043;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Header */
+        header { background-color: var(--primary); color: white; padding: 15px; text-align: center; }
+        header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        header p { font-size: 0.9rem; opacity: 0.9; }
+
+        /* Navigation Tabs */
+        nav { display: flex; background: #004d40; overflow-x: auto; padding: 5px; gap: 5px; }
+        .nav-btn { background: transparent; border: none; color: white; padding: 10px 15px; cursor: pointer; font-size: 0.9rem; white-space: nowrap; border-radius: 4px; transition: 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--secondary); }
+
+        /* Content Sections */
+        .container { padding: 15px; flex: 1; max-width: 800px; width: 100%; margin: 0 auto; }
+        .section { display: none; background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .section.active { display: block; }
+
+        /* API Key Section */
+        .key-box { background: #e0f2f1; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
+        input[type="password"], input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button.primary-btn { background: var(--secondary); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        button.primary-btn:hover { opacity: 0.9; }
+
+        /* Chat UI */
+        .chat-container { display: flex; flex-direction: column; height: 400px; }
+        .chat-messages { flex: 1; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px; margin-bottom: 10px; background: #fafafa; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px; border-radius: 6px; max-width: 80%; line-height: 1.4; word-break: break-word; }
+        .message.user { background: #e3f2fd; align-self: flex-end; color: #0d47a1; }
+        .message.ai { background: #f1f8e9; align-self: flex-start; border-left: 4px solid var(--primary); }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { margin: 0; flex: 1; }
+        .chat-input-area button { width: auto; padding: 0 20px; }
+
+        /* Textbook Cards */
+        .book-card { background: #f9f9f9; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+        .book-card h3 { font-size: 1rem; color: var(--primary); margin-bottom: 4px; }
+        .book-card p { font-size: 0.85rem; color: #666; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Class 6 Student Hub</h1>
+        <p>NCTB Textbooks, AI Assistant & Planner</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('textbooks', this)">📖 Textbooks</button>
+        <button class="nav-btn" onclick="switchTab('ai-buddy', this)">🤖 AI Study Buddy</button>
+        <button class="nav-btn" onclick="switchTab('planner', this)">📅 Study Planner</button>
+        <button class="nav-btn" onclick="switchTab('api-guide', this)">🔑 API Guide</button>
+        <button class="nav-btn" onclick="switchTab('contact', this)">💬 Contact</button>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Textbooks View -->
+        <div id="textbooks" class="section active">
+            <h2>Class 6 NCTB Textbooks & Subjects</h2>
+            <p style="margin: 10px 0; font-size: 0.9rem; color: #555;">Complete list of subjects, chapter details, and AQ guides:</p>
+            
+            <div class="book-card">
+                <h3>🧪 Science</h3>
+                <p>Covers Food & Nutrition (Chapter 13 on page 31), Plant Physiology, Photosynthesis, and Ecosystems.</p>
+            </div>
+            <div class="book-card">
+                <h3>📐 Mathematics</h3>
+                <p>Covers Standard Form, Fractions, and Geometry (Construction arcs, lengths, and degree markings).</p>
+            </div>
+            <div class="book-card">
+                <h3>💻 Information and Communication Technology (ICT)</h3>
+                <p>Covers computer hardware, digital safety, block programming, and ICT research reports.</p>
+            </div>
+            <div class="book-card">
+                <h3>📖 Islam & Moral Education / Religious Studies (AQ)</h3>
+                <p>Covers Al-Quran studies, Islamic values, ethics, and moral assessment questions (AQ).</p>
+            </div>
+            <div class="book-card">
+                <h3>📚 English & Bangla</h3>
+                <p>Grammar rules, comprehension, creative writing, and debate speech preparation guides.</p>
+            </div>
+        </div>
+
+        <!-- AI Study Buddy View -->
+        <div id="ai-buddy" class="section">
+            <h2>Gemini AI Study Assistant</h2>
+            <div class="key-box">
+                <span id="key-status">🔒 Key Status: Not Set</span>
+                <button onclick="switchTab('api-guide', document.querySelectorAll('.nav-btn')[3])" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:bold;">Configure</button>
+            </div>
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message ai">Hello Class 6 Student! 👋 I am your Gemini Study Assistant. Ask me any study question, math problem, or science topic!</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="user-input" placeholder="Ask your study question here..." onkeypress="handleKeyPress(event)">
+                    <button class="primary-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Planner View -->
+        <div id="planner" class="section">
+            <h2>Homework & Exam Planner</h2>
+            <p style="margin-top: 10px;">Track your daily revision schedule, class tests, assignments, and exam preparations!</p>
+        </div>
+
+        <!-- API Guide View -->
+        <div id="api-guide" class="section">
+            <h2>Set Your Google Gemini API Key</h2>
+            <p style="margin-top: 10px;">Enter your Gemini API key below to enable live AI answers:</p>
+            <input type="password" id="api-key-input" placeholder="Paste your Gemini API key here...">
+            <button class="primary-btn" onclick="saveApiKey()">Save Key</button>
+        </div>
+
+        <!-- Contact & Info View -->
+        <div id="contact" class="section">
+            <h2>Contact & Workspace Info</h2>
+            <p style="margin-top: 10px;">Built for Class 6 students to study smart, explore science, and practice coding!</p>
+        </div>
+
+    </div>
+
+    <!-- Link your separate JS file here -->
+    <script src="script.js"></script>
+</body>
+</html>
