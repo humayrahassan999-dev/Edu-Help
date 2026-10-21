@@ -1,20 +1,32 @@
 {
-  "studentInfo": {
-    "class": "Class 6",
-    "subject": "General Science & ICT"
-  },
   "textbooks": [
     {
       "id": 1,
-      "title": "Science - Chapter 13",
-      "page": 31,
-      "topic": "Food and Nutrition"
+      "title": "Science (General Science)",
+      "classLevel": "Class 6",
+      "subject": "Science",
+      "link": "http://www.nctb.gov.bd/"
     },
     {
       "id": 2,
-      "title": "ICT Study Guide",
-      "page": 1,
-      "topic": "NASA & Space Exploration"
+      "title": "Information and Communication Technology (ICT)",
+      "classLevel": "Class 6",
+      "subject": "ICT",
+      "link": "http://www.nctb.gov.bd/"
+    },
+    {
+      "id": 3,
+      "title": "Mathematics",
+      "classLevel": "Class 6",
+      "subject": "Math",
+      "link": "http://www.nctb.gov.bd/"
+    },
+    {
+      "id": 4,
+      "title": "English For Today",
+      "classLevel": "Class 6",
+      "subject": "English",
+      "link": "http://www.nctb.gov.bd/"
     }
   ]
 }
