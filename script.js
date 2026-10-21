@@ -1,44 +1,55 @@
-// Tab Navigation Logic
+// Tab Navigation Logic with Safety Checks
 function switchTab(tabId, btn) {
     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
+    const target = document.getElementById(tabId);
+    if (target) target.classList.add('active');
+    if (btn) btn.classList.add('active');
 }
 
 // Check Local Storage API Key on Load
 window.onload = function() {
     const savedKey = localStorage.getItem("gemini_api_key");
     if (savedKey) {
-        document.getElementById("key-status").innerText = "🔑 Key Status: Connected & Ready";
+        const status = document.getElementById("key-status");
+        if (status) status.innerText = "🔑 Key Status: Connected & Ready";
     }
 };
 
-// Save Key
+// Save Key Function
 function saveApiKey() {
-    const key = document.getElementById("api-key-input").value.trim();
+    const inputField = document.getElementById("api-key-input");
+    if (!inputField) return;
+    const key = inputField.value.trim();
+    
     if (key) {
         localStorage.setItem("gemini_api_key", key);
-        document.getElementById("key-status").innerText = "🔑 Key Status: Connected & Ready";
+        const status = document.getElementById("key-status");
+        if (status) status.innerText = "🔑 Key Status: Connected & Ready";
         alert("Key Saved Successfully!");
-        document.getElementById("api-key-input").value = "";
-        switchTab('ai-buddy', document.querySelectorAll('.nav-btn')[1]);
+        inputField.value = "";
+        
+        const buttons = document.querySelectorAll('.nav-btn');
+        if (buttons.length > 1) {
+            switchTab('ai-buddy', buttons[1]);
+        }
     } else {
         alert("Please enter a valid API key.");
     }
 }
 
-// Handle Enter Key in Chat
+// Handle Enter Key in Chat Input
 function handleKeyPress(e) {
     if (e.key === 'Enter') {
         sendMessage();
     }
 }
 
-// Ultra-Advanced Live Gemini API Request Handler
+// Live Gemini API Request Handler
 async function sendMessage() {
     const inputField = document.getElementById("user-input");
+    if (!inputField) return;
     const userText = inputField.value.trim();
     const apiKey = localStorage.getItem("gemini_api_key");
 
@@ -46,7 +57,10 @@ async function sendMessage() {
 
     if (!apiKey) {
         alert("Please configure your Gemini API key in the API Guide tab first!");
-        switchTab('api-guide', document.querySelectorAll('.nav-btn')[2]);
+        const buttons = document.querySelectorAll('.nav-btn');
+        if (buttons.length > 2) {
+            switchTab('api-guide', buttons[2]);
+        }
         return;
     }
 
@@ -58,8 +72,7 @@ async function sendMessage() {
     const loadingId = appendMessage("Thinking...", 'ai');
 
     try {
-        // Utilizing the current high-performance production model endpoint: gemini-3.8-flash
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json" 
@@ -67,35 +80,30 @@ async function sendMessage() {
             body: JSON.stringify({
                 contents: [{ 
                     parts: [{ text: userText }] 
-                }],
-                generationConfig: { 
-                    maxOutputTokens: 8192,
-                    temperature: 0.7
-                }
+                }]
             })
         });
 
         const data = await response.json();
         
-        // Advanced diagnostics logging to inspect full payload structure if necessary
-        console.debug("API Response Payload:", data);
-
-        // Safely extract text utilizing optional chaining architecture
         const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || 
                         data.error?.message || 
-                        "Sorry, I couldn't process that question. Please verify your API key limits.";
+                        "Sorry, I couldn't process that question. Please check your API key limits.";
         
-        document.getElementById(loadingId).innerText = aiReply;
+        const loadingNode = document.getElementById(loadingId);
+        if (loadingNode) loadingNode.innerText = aiReply;
 
-    } catch (networkError) {
-        console.error("Critical Network Exception:", networkError);
-        document.getElementById(loadingId).innerText = "Error connecting to the Gemini API network. Please check your connection.";
+    } catch (error) {
+        const loadingNode = document.getElementById(loadingId);
+        if (loadingNode) loadingNode.innerText = "Error connecting to Gemini API. Please check your internet connection.";
     }
 }
 
 // Message DOM Builder
 function appendMessage(text, sender) {
     const chatMessages = document.getElementById("chat-messages");
+    if (!chatMessages) return '';
+    
     const msgDiv = document.createElement("div");
     const msgId = 'msg-' + Date.now();
     msgDiv.id = msgId;
@@ -104,4 +112,4 @@ function appendMessage(text, sender) {
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return msgId;
-        }
+}
